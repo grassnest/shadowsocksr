@@ -1,105 +1,21 @@
-ShadowsocksR
-===========
+# ShadowsocksR Server for WHMCS
 
-[![Build Status]][Travis CI]
+# 背景
 
-A fast tunnel proxy that helps you bypass firewalls.
+    2014年前后开始接触Shadowsocks，当时只是下载Windows客户端，然后每天上网找免费账号，一年后在Google+上偶然看到了Alpharacks $2.99/年
+    的 OpenVZ 架构的VPS，自此开始研究自己搭建服务器，从单用户到基于ss-panel的多用户版，去年底开始尝试whmcs版的多用户版，新近又入手几个
+    便宜的KVM VPS，经过对比打算使用ShadowsocksR，基于[破瓦匠](https://github.com/shadowsocksr/shadowsocksr)的多用户版本进行修改，
+    基于Whmcs API与数据库进行交互
+    
+# 说明
+    
+    源代码基础上新增了两个文件
+    whmcs.py
+    config.py
+    
+    修改了db_transfer.py
+    
+# 部署
 
-Server
-------
-
-### Install
-
-Debian / Ubuntu:
-
-    apt-get install git
-    git clone https://github.com/shadowsocksr/shadowsocksr.git
-
-CentOS:
-
-    yum install git
-    git clone https://github.com/shadowsocksr/shadowsocksr.git
-
-Windows:
-
-    git clone https://github.com/shadowsocksr/shadowsocksr.git
-
-### Usage for single user on linux platform
-
-If you clone it into "~/shadowsocksr"  
-move to "~/shadowsocksr", then run:
-
-    bash initcfg.sh
-
-move to "~/shadowsocksr/shadowsocks", then run:
-
-    python server.py -p 443 -k password -m aes-128-cfb -O auth_aes128_md5 -o tls1.2_ticket_auth_compatible
-
-Check all the options via `-h`.
-
-You can also use a configuration file instead (recommend), move to "~/shadowsocksr" and edit the file "user-config.json", then move to "~/shadowsocksr/shadowsocks" again, just run:
-
-    python server.py
-
-To run in the background:
-
-    ./logrun.sh
-
-To stop:
-
-    ./stop.sh
-
-To monitor the log:
-
-    ./tail.sh
-
-
-Client
-------
-
-* [Windows] / [macOS]
-* [Android] / [iOS]
-* [OpenWRT]
-
-Use GUI clients on your local PC/phones. Check the README of your client
-for more information.
-
-Documentation
--------------
-
-You can find all the documentation in the [Wiki].
-
-License
--------
-
-Copyright 2015 clowwindy
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may
-not use this file except in compliance with the License. You may obtain
-a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-License for the specific language governing permissions and limitations
-under the License.
-
-Bugs and Issues
-----------------
-
-* [Issue Tracker]
-
-
-
-[Android]:           https://github.com/shadowsocksr/shadowsocksr-android
-[Build Status]:      https://travis-ci.org/shadowsocksr/shadowsocksr.svg?branch=manyuser
-[Debian sid]:        https://packages.debian.org/unstable/python/shadowsocks
-[iOS]:               https://github.com/shadowsocks/shadowsocks-iOS/wiki/Help
-[Issue Tracker]:     https://github.com/shadowsocksr/shadowsocksr/issues?state=open
-[OpenWRT]:           https://github.com/shadowsocks/openwrt-shadowsocks
-[macOS]:             https://github.com/shadowsocksr/ShadowsocksX-NG
-[Travis CI]:         https://travis-ci.org/shadowsocksr/shadowsocksr
-[Windows]:           https://github.com/shadowsocksr/shadowsocksr-csharp
-[Wiki]:              https://github.com/breakwa11/shadowsocks-rss/wiki
+    参考原版部署说明，之后在config.py里设置whmcs api的地址，用户名和密码
+    一定要将VPS的IP地址放在WHMCS的服务器白名单中，否则无法成功连接
