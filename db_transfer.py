@@ -8,6 +8,9 @@ from server_pool import ServerPool
 import traceback
 from shadowsocks import common, shell, lru_cache, obfs
 from configloader import load_config, get_config
+
+from whmcs import WhmcsApi
+
 import importloader
 
 switchrule = None
@@ -335,55 +338,24 @@ class DbTransfer(TransferBase):
 
 		if query_sub_when == '':
 			return update_transfer
-		query_sql = query_head + ' SET u = CASE port' + query_sub_when + \
-					' END, d = CASE port' + query_sub_when2 + \
-					' END, t = ' + str(int(last_time)) + \
-					' WHERE port IN (%s)' % query_sub_in
-		if self.cfg["ssl_enable"] == 1:
-			conn = cymysql.connect(host=self.cfg["host"], port=self.cfg["port"],
-					user=self.cfg["user"], passwd=self.cfg["password"],
-					db=self.cfg["db"], charset='utf8',
-					ssl={'ca':self.cfg["ssl_ca"],'cert':self.cfg["ssl_cert"],'key':self.cfg["ssl_key"]})
-		else:
-			conn = cymysql.connect(host=self.cfg["host"], port=self.cfg["port"],
-					user=self.cfg["user"], passwd=self.cfg["password"],
-					db=self.cfg["db"], charset='utf8')
+		
+		param = {'sub_when_first': query_sub_when, 'sub_when_second': query_sub_when2, 'sub_in': query_sub_in}
+
+		msg = ''
 
 		try:
-			cur = conn.cursor()
-			try:
-				cur.execute(query_sql)
-			except Exception as e:
-				logging.error(e)
-				update_transfer = {}
-
-			cur.close()
-			conn.commit()
+			msg = WhmcsApi.invoke_whmcs_api('updatessrtraffic', 'json', param)
 		except Exception as e:
 			logging.error(e)
 			update_transfer = {}
 		finally:
-			conn.close()
+			logging.info(msg)
 
 		return update_transfer
 
 	def pull_db_all_user(self):
-		import cymysql
-		#数据库所有用户信息
-		if self.cfg["ssl_enable"] == 1:
-			conn = cymysql.connect(host=self.cfg["host"], port=self.cfg["port"],
-					user=self.cfg["user"], passwd=self.cfg["password"],
-					db=self.cfg["db"], charset='utf8',
-					ssl={'ca':self.cfg["ssl_ca"],'cert':self.cfg["ssl_cert"],'key':self.cfg["ssl_key"]})
-		else:
-			conn = cymysql.connect(host=self.cfg["host"], port=self.cfg["port"],
-					user=self.cfg["user"], passwd=self.cfg["password"],
-					db=self.cfg["db"], charset='utf8')
-
-		try:
-			rows = self.pull_db_users(conn)
-		finally:
-			conn.close()
+		
+		rows = self.pull_db_users()
 
 		if not rows:
 			logging.warn('no user in db')
@@ -396,15 +368,12 @@ class DbTransfer(TransferBase):
 		except Exception as e:
 			keys = self.key_list
 
-		cur = conn.cursor()
-		cur.execute("SELECT " + ','.join(keys) + " FROM user")
+		result = WhmcsApi.invoke_whmcs_api('getshadowsocksusers', 'json', '');
+		users = result['users']
+
 		rows = []
-		for r in cur.fetchall():
-			d = {}
-			for column in range(len(keys)):
-				d[keys[column]] = r[column]
-			rows.append(d)
-		cur.close()
+		for user in users:
+			rows.append(user)
 		return rows
 
 class Dbv3Transfer(DbTransfer):
