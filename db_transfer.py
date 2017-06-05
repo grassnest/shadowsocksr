@@ -308,10 +308,8 @@ class DbTransfer(TransferBase):
 			self.cfg.update(cfg)
 
 	def update_all_user(self, dt_transfer):
-		import cymysql
 		update_transfer = {}
 		
-		query_head = 'UPDATE user'
 		query_sub_when = ''
 		query_sub_when2 = ''
 		query_sub_in = None
