@@ -359,7 +359,7 @@ class DbTransfer(TransferBase):
 			logging.warn('no user in db')
 		return rows
 
-	def pull_db_users(self, conn):
+	def pull_db_users(self):
 		try:
 			switchrule = importloader.load('switchrule')
 			keys = switchrule.getKeys(self.key_list)
