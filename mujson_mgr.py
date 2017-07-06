@@ -214,11 +214,11 @@ def print_server_help():
 	print('''usage: python mujson_manage.py -a|-d|-e|-c|-l [OPTION]...
 
 Actions:
-  -a ADD               add/edit a user
-  -d DELETE            delete a user
-  -e EDIT              edit a user
-  -c CLEAR             set u/d to zero
-  -l LIST              display a user infomation or all users infomation
+  -a                   add/edit a user
+  -d                   delete a user
+  -e                   edit a user
+  -c                   set u&d to zero
+  -l                   display a user infomation or all users infomation
 
 Options:
   -u USER              the user name
