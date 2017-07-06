@@ -11,22 +11,21 @@ ENV DNS_ADDR    8.8.8.8
 ENV DNS_ADDR_2  8.8.4.4
 
 
-RUN apk update \
-    && apk add python \
+ARG BRANCH=manyuser
+ARG WORK=~
+
+
+RUN apk --no-cache add python \
     libsodium \
-    unzip \
-    wget \
-  && rm -rf /var/cache/apk/*
+    wget
 
 
-
-RUN wget --no-check-certificate https://github.com/breakwa11/shadowsocks/archive/manyuser.zip -O /tmp/manyuser.zip \
-    && unzip -d /tmp /tmp/manyuser.zip \
-    && mv /tmp/shadowsocksr-manyuser/shadowsocks ~/shadowsocks \
-    && rm -rf /tmp/*
+RUN mkdir -p $WORK && \
+    wget -qO- --no-check-certificate https://github.com/shadowsocksr/shadowsocksr/archive/$BRANCH.tar.gz | tar -xzf - -C $WORK
 
 
-WORKDIR ~/shadowsocks
+WORKDIR $WORK/shadowsocksr-$BRANCH/shadowsocks
 
 
-CMD python ~/shadowsocks/server.py -p $SERVER_PORT -k $PASSWORD -m $METHOD -O $PROTOCOL -o $OBFS
+EXPOSE $SERVER_PORT
+CMD python server.py -p $SERVER_PORT -k $PASSWORD -m $METHOD -O $PROTOCOL -o $OBFS -G $PROTOCOLPARAM
