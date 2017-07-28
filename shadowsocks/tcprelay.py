@@ -1469,4 +1469,4 @@ class TCPRelay(object):
                 self._eventloop.removefd(self._server_socket_fd)
             self._server_socket.close()
             for handler in list(self._fd_to_handlers.values()):
-                handler.destroy(
+                handler.destroy()
