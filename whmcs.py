@@ -16,8 +16,8 @@ class WhmcsApi:
         content_type = "application/%s" % format
         headers = {'content-type': content_type}
         payload = {
-            'username': config.API_USER,
-            'password': hashlib.md5(config.API_PASSWORD).hexdigest(),
+            'identifier': config.API_IDENTIFIER,
+            'secret': config.API_SECRET,
             'responsetype': format,
             'action': action
         }
