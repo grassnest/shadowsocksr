@@ -3,8 +3,8 @@ import logging
 PANEL_VERSION = 'V3' # V2 or V3. V2 not support API
 
 API_URL = 'http://www.XXXXXX.com/includes/api.php'
-API_USER = 'user'
-API_PASSWORD = 'password'
+API_IDENTIFIER = 'identifier'
+API_SECRET = 'secret'
 
 NODE_ID = '1'
 CHECKTIME = 15
